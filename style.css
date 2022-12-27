@@ -1,6 +1,6 @@
 body {
         margin-left: 250px;
-        padding: 4em; font-family: 'Times New Roman', monospace; font-size: 1.75em;
+        padding: 4em; font-family: 'Karla', monospace; font-size: 1.75em;
 
       }
       h1 { font-size: 3.5em; line-height: 2em; text-transform: uppercase; }
@@ -10,8 +10,3 @@ body {
       a, a:visited { color: #333; }
       a:active, a:hover { color: #369; /* background-image: linear-gradient(180deg,transparent 70%,rgba(255,125,225,.4) 0) */ }
       small { color: #999; }
-      /*
-        font-family: 'Roboto Mono', monospace;
-        font-family: 'Slabo 27px', serif;
-        font-family: 'Roboto Slab', serif;
-      */
