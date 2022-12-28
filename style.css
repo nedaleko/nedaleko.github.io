@@ -10,7 +10,7 @@
 
 } 
 
-@media screen and (min width: 801px) {
+@media screen and (min-width: 801px) {
         
         body {
                 margin-left: 50px;
