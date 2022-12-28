@@ -1,13 +1,21 @@
 @media screen and (max-width: 600px) {
 
         body {
-                margin-left: 50px;
+                margin-left: 10px;
                 padding: 0; 
                 font-family: 'Karla', monospace; 
                 font-size: 1.75em;
         }
 
 } 
+
+body {
+                margin-left: 50px;
+                padding: 0; 
+                font-family: 'Karla', monospace; 
+                font-size: 1.75em;
+        }
+
 
 .wrapper {
         margin: 0 auto;
