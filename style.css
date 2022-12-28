@@ -10,12 +10,15 @@
 
 } 
 
-body {
+@media screen and (min width: 801px) {
+        
+        body {
                 margin-left: 50px;
                 margin-right: 50px;
                 padding: 0; 
                 font-family: 'Karla', monospace; 
                 font-size: 1.75em;
+        }
 }
 
 
