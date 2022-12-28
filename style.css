@@ -1,9 +1,13 @@
-body {
-        margin-left: 250px;
-        padding: 0; 
-        font-family: 'Karla', monospace; 
-        font-size: 1.75em;
-}
+@media screen and (max-width: 600px) {
+
+        body {
+                margin-left: 250px;
+                padding: 0; 
+                font-family: 'Karla', monospace; 
+                font-size: 1.75em;
+        }
+
+} 
 
 .wrapper {
         margin: 0 auto;
