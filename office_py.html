@@ -14,7 +14,106 @@
 <h1>Automated Sales Reporting</h1>
 <p>this is a python script made using the chargedesk api and python's smtp library:</p>
 <hr />
-<small>currently redacting and cleaning code from api keys and sensitive information before publication</small>
+<p>
+  <pre>from http.client import HTTPSConnection
+from base64 import b64encode
+import time
+from datetime import datetime
+import requests
+import smtplib
+from email.mime.text import MIMEText
+
+
+def basic_auth(username):
+    token = b64encode(f"{username}:".encode('utf-8')).decode("ascii")
+    return f'Basic {token}'
+
+def send_email(subject, body, sender, recipients, password):
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = sender
+    msg['To'] = ', '.join(recipients)
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+        smtp_server.login(sender, password)
+        smtp_server.sendmail(sender, recipients, msg.as_string())
+    print("Report sent!")
+
+print("CHARGEDESK REPORT AUTOMATED EMAIL SERVICE\n\n\n")
+
+hour = time.strftime("%H", time.localtime())
+print('The current time is: ', time.strftime("%H:%M", time.localtime()))
+print("The hour condition still hasn't checked out,  waiting to move on to email loop. Checking in one minute.\n\n")
+while hour != '17':
+    time.sleep(60)
+    print('One minute down, the current time is: ', time.strftime("%H:%M", time.localtime()))
+    print("The hour condition still hasn't checked out,  waiting to move on to email loop. Checking in one minute.\n\n")
+    hour = time.strftime("%H", time.localtime())
+
+print("\n\nThe hour condition has checked out. \nBreaking from this loop, now moving on to email loop.\n\n")
+
+number_of_days = 0
+while True:
+
+    day = time.strftime("%a", time.localtime())
+    weekdays = ["Mon", "Tue","Wed","Thu","Fri"]
+    weekend = ["Sat", "Sun"]
+    if day in weekend:
+        time.sleep(86400)
+    if day in weekdays:
+        if day == "Mon":
+            timer == round(time.time()) - 3 * 86400
+        else:
+            timer = round(time.time()) - 86400
+        if day == "Fri":
+            next_time = "The next email will be sent next Monday. Have a good weekend!"
+        else:
+            next_time = "The next email will be sent tomorrow in 24 hours. Have a good day and enjoy the rest of your day!"
+
+        username = "insert_your_api_key_here"
+        api_headers = { 'Authorization' : basic_auth(username) }
+        api_url = "https://api.chargedesk.com/v1/charges"
+        api_params = {'occurred[min]': timer}
+        r = requests.get(url=api_url, params=api_params, headers=api_headers)
+        data = r.json()
+        info = data["data"]
+        message_body = []
+        sales = 0
+
+        for i in info:
+            utc_time = datetime.fromtimestamp(int(i["occurred"]))
+            utc_time = utc_time.strftime("%Y-%m-%d %H:%M")
+            customer = i["customer_email"]
+            amount = i['amount']
+            status = i["status"]
+            # print(f"Customer: {customer:<50}${amount:<30}{utc_time}")
+            message_body.append(f"Customer: {customer:<50}${amount:<30}{status:<20}{utc_time}")
+            sales += float(amount)
+
+        joined = "\n".join(message_body)
+        if sales <= 1000:
+            flair = "Lots of calling and following up today!"
+        elif sales < 2000 and sales > 1000:
+            flair = "Mix of calling and pitching today!"
+        elif sales >= 2000 and sales < 5000:
+            flair = "Good results today!"
+        else:
+            flair = "That's a lot for the day!"
+
+
+        subject = "Daily Chargedesk Report"
+        body = "For the day we have: \n\n"+ joined + "\n\n" + flair
+        sender = "your_email"
+        recipients = ["whoevers_emails_can_be_multiple_strings_in_the_list", "like_so"]
+        password = 'your_email_password'
+
+        send_email(subject, body, sender, recipients, password)
+        print(f"Number of days the program has run: {number_of_days}")
+        print(next_time)
+        time.sleep(86399)
+    number_of_days += 1
+</pre>
+</p>
+<small>Code has been redacted and modified to withhold api keys and sensitive information before publication</small>
 <p>
   <a href="index.html">back to reception</a>
 </p>
