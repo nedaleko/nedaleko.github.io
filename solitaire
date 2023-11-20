@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>automated sales reporting - made with python</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+<h1>cli solitaire game</h1>
+<p>this is a simplified version of the popular game solitaire meant to be played via python idle</p>
+<p>simple reformatting of this code can be made using python's pyinstaller module to produce a playable .exe</p>
+<p>documentation can be found <a href="AssCool.pdf">here</a> </p>
+<hr />
+
+
+
+<p>
+<pre>
+
+    import time
+import random
+
+class CardPile:
+
+    def __init__(self):
+        self.items = []
+
+    def add_top(self, item):
+        self.items.insert(0, item)
+
+    def add_bottom(self, item):
+        self.items.append(item)
+
+    def remove_top(self):
+        item = self.items.pop(0)
+        return item
+
+    def remove_bottom(self):
+        item = self.items.pop(-1)
+        return item
+
+    def size(self):
+        return len(self.items)
+
+    def peek_top(self):
+        return self.items[0]
+
+    def peek_bottom(self):
+        return self.items[-1]
+
+    def print_all(self, index):
+        if index == 0:
+            shorter = len(self.items)-1
+            print(self.items[0], " ".join(["*" for x in range(shorter)]))
+        else:
+            print(" ".join([str(i) for i in self.items]))
+
+
+class Solitaire:
+
+    def __init__(self, cards=[1,2,3,4,5,6]):
+        self.piles = []
+        self.num_cards = len(cards)
+        self.num_piles = (self.num_cards // 8) + 3
+        self.max_num_moves = self.num_cards * 2
+        for i in range(self.num_piles):
+            self.piles.append(CardPile())
+        for i in range(self.num_cards):
+            self.piles[0].add_bottom(cards[i])
+        self.inventory = {1: [[random.randint(1,9)]],
+                          2: [[1,2],[5,6],[6,7],[8,9],[4,3],[2,3]],
+                          3: [[1, 2, 3], [3, 2, 1], [2, 3, 1]],
+                          4: [[1, 2, 3, 4], [2, 3, 4, 5]],
+                          5: [[5, 9, 8, 7, 6]],
+                          6: [[5, 9, 8, 7, 6, 2]],
+                          7: [[5, 9, 8, 7, 1, 2, 1]],
+                          8: [[5, 9, 8, 7, 1, 2, 1, 3]],
+                          9: [[5, 9, 8, 7, 6, 2, 1, 3, 4]],
+                          10: [[5, 3, 9, 6, 12, 8, 11, 4, 10, 7]],
+                          11: [[5, 3, 9, 6, 12, 8, 11, 4, 10, 7, 1]],
+                          12: [[5, 3, 9, 6, 12, 8, 11, 4, 10, 7, 1, 2]],
+                          13: [[5, 3, 9, 6, 12, 8, 11, 4, 10, 7, 1, 2, 8]]
+                              }
+
+    def reset_pile(self, cards):
+        self.piles = []
+        self.num_cards = len(cards)
+        self.num_piles = (self.num_cards // 8) + 3
+        self.max_num_moves = self.num_cards * 2
+        for i in range(self.num_piles):
+            self.piles.append(CardPile())
+        for i in range(self.num_cards):
+            self.piles[0].add_bottom(cards[i])
+
+    def get_pile(self, i):
+        return self.piles[i]
+
+    def display(self):
+        print('\n\n')
+        for i, y in enumerate(self.piles):
+            time.sleep(0.03)
+            if i == 0:
+                if y.size() != 0:
+                    print("0: ", end="")
+                    y.print_all(0)
+                else:
+                    print("0: ")
+            elif y.size() == 0:
+                print(str(i),":", sep="")
+            if i != 0 and y.size() != 0:
+                print(str(i),":", sep="", end=" ")
+                y.print_all(1)
+        print()
+        time.sleep(0.2)
+
+    def move(self, p1, p2):
+        if self.piles[p1].size() > 0:
+            pile_zero = self.piles[0]
+            pile_one = self.piles[p1]
+            pile_two = self.piles[p2]
+            if p1 == 0 and p2 == 0:
+                pile_zero.add_bottom(pile_zero.remove_top())
+            elif p1 == 0 and p2 > 0:
+                if pile_two.size() == 0:
+                    pile_two.add_bottom(pile_zero.remove_top())
+                elif pile_one.peek_top() == pile_two.peek_bottom() - 1:
+                    pile_two.add_bottom(pile_zero.remove_top())
+            else:
+                if pile_one.size() != 0 and pile_two.size() != 0:
+                    if p2 != 0:
+                        if pile_one.peek_top() == pile_two.peek_bottom() - 1:
+                            for i in range(pile_one.size()):
+                                card_to_move = pile_one.remove_top()
+                                pile_two.add_bottom(card_to_move)
+
+    def is_complete(self):
+        for index, pile in enumerate(self.piles):
+            if pile.size() == self.num_cards and index != 0:
+                return True
+        return False
+
+    def main_menu(self):
+        time.sleep(0.1)
+        print()
+        print("""
+
+
+
+                            MAIN MENU
+        """)
+        time.sleep(0.5)
+        print()
+        print("""                    1: Start a game of solitaire
+        """)
+        time.sleep(0.1)
+        print("""                    2: Rules
+        """)
+        time.sleep(0.1)
+        print("""                    0: Exit
+
+
+        """)
+        time.sleep(0.1)
+        print()
+        while True:
+            try:
+                user = int(input(
+                    "CHOOSE AN OPTION (ENTER A NUMBER FROM ABOVE) >>> "))
+                if user == 0 or user == 1 or user == 2:
+                    time.sleep(0.3)
+                    return int(user)
+                time.sleep(0.2)
+                print("Valid options are 0, 1 or 2\n")
+                time.sleep(0.2)
+            except:
+                time.sleep(0.2)
+                print("Valid options are 0, 1 or 2\n")
+                time.sleep(0.2)
+
+    def game_menu(self):
+        time.sleep(0.2)
+        print("\n\n\n")
+        print("""            You have chosen to start a new game of Solitaire!
+        \n\n\n""")
+        time.sleep(0.2)
+        print("""               1: Random cards (may not be winnable)
+        """)
+        time.sleep(0.2)
+        print("""               2: Pre-existing set (length 1 to 13)
+        """)
+        time.sleep(0.2)
+        print("""               0: Return to main menu
+
+
+        """)
+        time.sleep(0.2)
+        while True:
+            try:
+                user = int(input(
+                    "CHOOSE AN OPTION (ENTER A NUMBER FROM ABOVE) >>> "))
+                if user == 0 or user == 1 or user == 2:
+                    break
+                time.sleep(0.2)
+                print("Valid options are 0, 1 or 2\n")
+                time.sleep(0.2)
+            except:
+                time.sleep(0.2)
+                print("Valid options are 0, 1 or 2\n")
+                time.sleep(0.2)
+        time.sleep(0.3)
+        if int(user) == 1:
+            card_hand = []
+            time.sleep(0.2)
+            print("""
+
+
+      _                                _           _          _
+     | |__  _ __ __ ___   _____    ___| |__   ___ (_) ___ ___| |
+     | '_ \| '__/ _` \ \ / / _ \  / __| '_ \ / _ \| |/ __/ _ \ |
+     | |_) | | | (_| |\ V /  __/ | (__| | | | (_) | | (_|  __/_|
+     |_.__/|_|  \__,_| \_/ \___|  \___|_| |_|\___/|_|\___\___(_)
+
+
+
+            """)
+            time.sleep(1)
+            print()
+            while True:
+                try:
+                    user = int(input(
+                        "CHOOSE YOUR HAND'S SIZE (ENTER A NUMBER) >>> "))
+                    if int(user) > 0:
+                        break
+                    time.sleep(0.2)
+                    print("Valid options are lengths above 0\n")
+                    time.sleep(0.2)
+                except:
+                    time.sleep(0.2)
+                    print("Valid options are lengths above 0\n")
+                    time.sleep(0.2)
+            random_number = random.randint(1, int(user))
+            while len(card_hand) != int(user):
+                if random_number not in card_hand:
+                    card_hand.append(random_number)
+                random_number = random.randint(1, int(user))
+            self.reset_pile(card_hand)
+        elif int(user) == 2:
+            time.sleep(0.2)
+            print()
+            while True:
+                try:
+                    user = int(input(
+                        "CHOOSE THE SIZE OF YOUR HAND (ENTER A NUMBER) >> "))
+                    if int(user) > 0:
+                        break
+                    time.sleep(0.2)
+                    print("Va1id options are numbers (inclusive) 1 to 13")
+                    time.sleep(0.2)
+                except:
+                    time.sleep(0.2)
+                    print("Va1id options are numbers (inclusive) 1 to 13")
+                    time.sleep(0.2)
+            hand_options = self.inventory[int(user)]
+            chosen_hand = random.randint(0, len(hand_options) - 1)
+            self.reset_pile(hand_options[chosen_hand])
+        elif int(user) == 0:
+            return 5
+
+    def game(self):
+        state = self.game_menu()
+        if state == 5:
+            return state
+        print("""\n\n\n\n
+      ************************ NEW GAME **************************
+        \n\n\n""")
+        time.sleep(0.5)
+        print()
+        print()
+        move_number = 1
+        max_move = self.max_num_moves
+        while move_number <= max_move and self.is_complete() == False:
+                self.display()
+                max_moves = self.max_num_moves
+                print("ROUND", move_number, "OUT OF", max_moves)
+                print("Remember you can exit at any point by entering '-1'\n")
+                while True:
+                    try:
+                        row1 = int(input(
+                            "\nMove a card from pile number: "),10)
+                        if row1 == -1:
+                            print("\n\nGame Interrupted, ",end="")
+                            print("returning to main menu...")
+                            time.sleep(2)
+                            return 5
+                        if row1 <= len(self.piles) -1 and row1 > -1:
+                            break
+                        print("Enter a valid pile number!")
+                        time.sleep(0.2)
+                    except:
+                        print("Enter a valid pile number!")
+                        time.sleep(0.2)
+                while True:
+                    try:
+                        row2 = int(input(
+                            "\nMove a card to pile number: "),10)
+                        if row2 == -1:
+                            print("\n\nGame Interrupted, ", end="")
+                            print("returning to main menu...")
+                            time.sleep(2)
+                            return 5
+                        if row2 <= len(self.piles) -1 and row2 > -1:
+                            break
+                        print("Enter a valid pile number!")
+                        time.sleep(0.2)
+                    except:
+                        print("Enter a valid pile number!")
+                        time.sleep(0.2)
+                if row1 >= 0 and row2 >= 0:
+                    if row1 < self.num_piles and row2 < self.num_piles:
+                        if self.piles[row1].size() == 0 and row1 != 0:
+                            if self.piles[row2].size() == 0 and row2 != 0:
+                                print("\nThis move did not achieve anything!")
+                        else:
+                            self.move(row1, row2)
+                            move_number += 1
+        if self.is_complete():
+            time.sleep(0.5)
+            print("""
+
+   ____                            _         _       _   _                 _
+  / ___|___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_(_) ___  _ __  ___| |
+ | |   / _ \| '_ \ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \| '_ \/ __| |
+ | |__| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | \__ \_|
+  \____\___/|_| |_|\__, |_|  \__,_|\__|\__,_|_|\__,_|\__|_|\___/|_| |_|___(_)
+                   |___/
+
+        """)
+            time.sleep(0.5)
+            print()
+            if move_number == 2:
+
+                print("You won in", move_number - 1, "step!\n")
+            else:
+                print("You won in", move_number - 1, "steps!\n")
+        else:
+            print("""
+
+  _____                               _       _
+ |_   _| __ _   _    __ _  __ _  __ _(_)_ __ | |
+   | || '__| | | |  / _` |/ _` |/ _` | | '_ \| |
+   | || |  | |_| | | (_| | (_| | (_| | | | | |_|
+   |_||_|   \__, |  \__,_|\__, |\__,_|_|_| |_(_)
+            |___/         |___/
+
+            """)
+            print("You lost, better luck next time!\n")
+        time.sleep(1)
+        print()
+        user = input("Enter 1 to play again or 0 to exit to main menu >>> ")
+        print("\n\n\n")
+        if int(user) == 0:
+            return 5
+        else:
+            return 1
+
+    def play(self):
+        print("""
+          ____   ___  _     ___ _____  _    ___ ____  _____
+         / ___| / _ \| |   |_ _|_   _|/ \  |_ _|  _ \| ____|
+         \___ \| | | | |    | |  | | / _ \  | || |_) |  _|
+          ___) | |_| | |___ | |  | |/ ___ \ | ||  _ <| |___
+         |____/ \___/|_____|___| |_/_/   \_\___|_| \_\_____|
+
+        """)
+        print()
+        time.sleep(1)
+        entry_to_game = self.main_menu()
+        while entry_to_game != 0:
+            if entry_to_game == 1:
+                current_state = 1
+                while current_state == 1:
+                    current_state = self.game()
+            elif entry_to_game ==2:
+                current_state = 99
+                while current_state == 99:
+                    current_state = self.rules()
+            entry_to_game = self.main_menu()
+        time.sleep(0.5)
+        print("""
+
+
+
+
+              _____ _   _    _    _   _ _  ______
+             |_   _| | | |  / \  | \ | | |/ / ___|
+               | | | |_| | / _ \ |  \| | ' /\___ \
+               | | |  _  |/ ___ \| |\  | . \ ___) |
+               |_| |_| |_/_/   \_\_| \_|_|\_\____/
+
+                        _____ ___  ____
+                       |  ___/ _ \|  _ \
+                       | |_ | | | | |_) |
+                       |  _|| |_| |  _ <
+                       |_|   \___/|_| \_\
+
+              ____  _        _  __   _____ _   _  ____
+             |  _ \| |      / \ \ \ / /_ _| \ | |/ ___|
+             | |_) | |     / _ \ \ V / | ||  \| | |  _
+             |  __/| |___ / ___ \ | |  | || |\  | |_| |
+             |_|   |_____/_/   \_\ _| |___|_| \_|\____|
+
+
+
+
+
+        """)
+
+    def rules(self):
+        print("""
+
+
+
+                The rules to Solitaire (or at least this version of it)
+            """)
+        time.sleep(0.05)
+        print("""
+        You will presented with a hand of cards containing shuffled
+        numbers, although there is a small chance you can get consecutive
+        hands in the random hand game mode.
+            """)
+        time.sleep(0.05)
+        print("""
+        Apart from the first card at the top of the hand, all its other
+        cards will be hidden.
+            """)
+        time.sleep(0.05)
+        print("""
+        At the start of the game and at any point in the game, assuming you
+        still have moves left, you can shuffle through the hand which will
+        be placed in pile 0, at the top of the other piles.
+            """)
+        time.sleep(0.05)
+        print("""
+        Your goal is to rearrange the cards from pile 0 into a single other
+        pile which must be in descending order (going from the biggest card
+        to the smallest card).
+            """)
+        time.sleep(0.05)
+        print("""
+        When you have emptied pile 0 and that the cards that were in pile 0
+        are now all rearranged in a single other pile according to the
+        required order, you have won the game!
+            """)
+        time.sleep(0.05)
+        print("""
+        Every round you will have the opportunity to move cards from one
+        pile to another or to rotate through the hand.
+            """)
+        time.sleep(0.05)
+        print("""
+        Apart from the first card at the top of the hand, all its other
+        cards will be hidden.
+            """)
+        time.sleep(0.05)
+        print("""
+        Exceeding the number of available rounds without solving the
+        solitaire game will result in defeat.
+            """)
+        time.sleep(0.05)
+        print("""
+        At any round, to return to the main menu, enter "-1".
+
+            Have fun!
+
+
+            """)
+        time.sleep(1)
+        print()
+        while True:
+            try:
+                user = int(input(
+                    "ENTER 0 TO RETURN TO MAIN MENU >> "))
+                if user == 0:
+                    return 5
+                time.sleep(0.2)
+                print("Entering 0 will get you to the main menu\n")
+                time.sleep(0.2)
+            except:
+                time.sleep(0.2)
+                print("Entering 0 will get you to the main menu\n")
+                time.sleep(0.2)
+        time.sleep(0.3)
+
+
+
+Solitaire().play()
+
+</pre>
+</p>
+<p>
+    <a href="index.html">back to reception</a>
+</p>
+<hr />
+</body>
+</html>
