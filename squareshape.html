@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>square shapes - java shapes</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+<h1>SQUARE SHAPE</h1>
+<p>this is one of the 8 files for this project</p>
+<p>the file can be downloaded <a href="SquareShape.java">here</a> </p>
+
+<p>
+    <a href="index.html">back to reception</a>
+</p>
+<hr />
+
+
+
+<p>
+<pre>
+
+
+/**
+ * ===============================================================================
+ * SquareShape.java : A shape that is a square.
+ * =============================================================================== */
+import java.awt.*;
+class SquareShape extends RectangleShape {
+    public SquareShape() {
+		width = DEFAULT_HEIGHT;
+		height = DEFAULT_HEIGHT;
+	}
+	public SquareShape(int x, int y, int s, int pw, int ph, Color c, Color bc, PathType pt) {
+		super(x ,y ,s, s ,pw ,ph, c, bc, pt);
+	}
+}
+
+</pre>
+</p>
+
+<hr />
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rectangle shape - java shapes</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+<h1>RECTANGLE SHAPE</h1>
+<p>this is one of the 8 files for this project</p>
+<p>the file can be downloaded <a href="RectangleShape.java">here</a> </p>
+
+<p>
+    <a href="index.html">back to reception</a>
+</p>
+<hr />
+
+
+
+<p>
+<pre>
+
+/*
+ *	===============================================================================
+ *	RectangleShape.java : A shape that is a rectangle.
+ *	=============================================================================== */
+import java.awt.*;
+class RectangleShape extends Shape {
+    public RectangleShape() {}
+	public RectangleShape(int x, int y, int w, int h, int pw, int ph, Color c, Color bc, PathType pt) {
+		super(x ,y ,w, h ,pw ,ph, c, bc, pt);
+	}
+	public void draw(Graphics g) {
+        g.setColor(super.color);
+        g.fillRect(super.x, super.y, super.width, super.height);
+        g.setColor(super.borderColor);
+        g.drawRect(super.x, super.y, super.width, super.height);
+	}
+}
+
+
+
+
+</pre>
+</p>
+
+<hr />
+</body>
+</html>
