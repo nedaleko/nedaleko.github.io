@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Banusha</title>
+    <style>
+        body {
+            background-color: #ffe6f0;
+            color: #ff69b4;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin: 0;
+            position: relative;
+            animation: glitter 2s infinite;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+        }
+
+        p {
+            font-size: 1.5em;
+            margin: 20px 0;
+            position: relative;
+            text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+        }
+
+        @keyframes glitter {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                             0 0 20px rgba(255, 105, 180, 0.6),
+                             0 0 30px rgba(255, 105, 180, 0.4),
+                             0 0 40px rgba(255, 105, 180, 0.2);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1),
+                             0 0 30px rgba(255, 105, 180, 0.8),
+                             0 0 40px rgba(255, 105, 180, 0.6),
+                             0 0 50px rgba(255, 105, 180, 0.4);
+            }
+        }
+
+        .background-hearts {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .heart {
+            --heart-size: 20px;
+            position: absolute;
+            width: var(--heart-size);
+            height: var(--heart-size);
+            background: #ff69b4;
+            transform: rotate(-45deg);
+            opacity: 0.9;
+            animation: move-out 10s linear forwards;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            position: absolute;
+            width: var(--heart-size);
+            height: var(--heart-size);
+            background: #ff69b4;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: calc(-0.5 * var(--heart-size));
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: calc(0.5 * var(--heart-size));
+        }
+
+        @keyframes move-out {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(-45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x-offset), var(--y-offset)) scale(2) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="background-hearts" id="background-hearts"></div>
+    <div class="container">
+        <h1>Happy Valentine's Day Pookie!</h1>
+        <p>For a cute car</p>
+        <img src="car.jpg" alt="Cute car" style="width: 10%; height: auto;">
+    </div>
+    <div>
+
+
+    </div>
+    <script>
+        function createHeartExplosion() {
+            const heartContainer = document.getElementById('background-hearts');
+            const numHearts = 50;
+            const scale = 12;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            for (let i = 0; i < numHearts; i++) {
+                const t = (i / numHearts) * 2 * Math.PI; // Convert index to angle
+                const x = scale * (16 * Math.pow(Math.sin(t), 3)); // Heart x formula
+                const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)); // Heart y formula
+
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+
+                heart.style.left = `${centerX + x}px`;
+                heart.style.top = `${centerY + y}px`;
+                
+                // this will make the hearts appear in different positions
+                heart.style.setProperty('--x-offset', `${x * 5}px`);
+                heart.style.setProperty('--y-offset', `${y * 5}px`);
+
+                // this will make the hearts appear in different sizes
+                const size = Math.random() * 10 + 20;
+                heart.style.setProperty('--heart-size', `${size}px`);
+
+                heartContainer.appendChild(heart);
+
+                // this will remove the heart after 10 seconds
+                setTimeout(() => heart.remove(), 10000);
+            }
+        }
+
+
+        setInterval(createHeartExplosion, 3000);
+
+        createHeartExplosion();
+    </script>
+</body>
+</html>
